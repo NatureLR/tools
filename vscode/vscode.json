@@ -1,8 +1,10 @@
 {
-    "go.gopath": "/Users/zxz/go",
     "workbench.colorTheme": "One Dark Pro",
     "workbench.iconTheme": "vscode-icons",
-    "go.inferGopath": true,
     "terminal.integrated.shell.osx": "/bin/zsh",
+    "go.gopath": "$HOME/go",
+    "go.inferGopath": true,
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
     "files.autoSave": "onWindowChange"
 }
