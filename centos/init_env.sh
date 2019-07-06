@@ -42,7 +42,7 @@ echo -e "${GREEN_COLOR}初始化:更新软件和系统${RES}"
 yum -y update
 
 # 需要安装的软件列表
-apps="vim net-tools htop"
+apps="vim net-tools git htop"
 
 for app in $apps; do
 
