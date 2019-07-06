@@ -8,7 +8,7 @@ if [ $(cat /etc/shells | grep -c "zsh") -eq 0 ]; then
 
 fi
 
-# 切换shel到zsh
+# 切换shell到zsh
 chsh -s /bin/zsh
 
 # 下载并装oy-my-zsh
