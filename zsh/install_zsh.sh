@@ -1,10 +1,10 @@
 #!/bin/bash
+WORKDIR=$(cd $(dirname $0); pwd)
 
 # 判断是否已经安装了zsh
 if [ $(cat /etc/shells | grep -c "zsh") -eq 0 ]; then
 
-    # sudo apt install zsh
-    yum -y install zsh
+    sudo apt install zsh
 
 fi
 
@@ -22,6 +22,6 @@ git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh
 
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
-cp zshrc.conf $HOME/.zshrc
+cp $WORKDIR/zshrc.conf $HOME/.zshrc
 
 source $HOME/.zshrc

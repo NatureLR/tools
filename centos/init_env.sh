@@ -1,5 +1,7 @@
 #! /bin/bash
 
+WORKDIR=$(cd $(dirname $0); pwd)
+
 #定义颜色
 RED_COLOR='\E[1;31m'   #红
 GREEN_COLOR='\E[1;32m' #绿
@@ -50,3 +52,7 @@ for app in $apps; do
     yum -y install $app
 
 done
+
+# 安装docker
+WORKDIR=$(cd $(dirname $0); pwd)
+sh  $WORKDIR/../docker/install_docker.sh
