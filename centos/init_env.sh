@@ -38,14 +38,15 @@ echo -e "${GREEN_COLOR}初始化:安装EPEL${RES}"
 #下载阿里开源镜像的epel源文件
 wget -O /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo    
 
-echo -e "${GREEN_COLOR}初始化:安装vim${RES}"
-yum -y install vim
-
-echo -e "${GREEN_COLOR}初始化:安装net-tools${RES}"
-yum -y install net-tools
-
-echo -e "${GREEN_COLOR}初始化:安装htop${RES}"
-yum -y install htop
-
 echo -e "${GREEN_COLOR}初始化:更新软件和系统${RES}"
 yum -y update
+
+# 需要安装的软件列表
+apps="vim net-tools htop"
+
+for app in $apps; do
+
+    echo -e "${GREEN_COLOR}初始化:安装$app${RES}"
+    yum -y install $app
+
+done
