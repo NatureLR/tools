@@ -15,10 +15,10 @@ chsh -s /bin/zsh
 
 wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
 
-# 安装autosuggestions语法高亮
+# 安装autosuggestions 自动补全
 git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-# 安装autosuggestions 命令提示
+# 安装autosuggestions 语法高亮
 
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
