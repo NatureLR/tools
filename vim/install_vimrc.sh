@@ -1,1 +1,1 @@
-mv vimrc $HOME/.vimrc
+rm -rf $HOME/.vimrc && cp vimrc $HOME/.vimrc
