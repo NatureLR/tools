@@ -43,6 +43,11 @@ wget -O /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo
 echo -e "${GREEN_COLOR}初始化:更新软件和系统${RES}"
 yum -y update
 
+# 安装ctop
+
+sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.2/ctop-0.7.2-linux-amd64 -O /usr/local/bin/ctop
+sudo chmod +x /usr/local/bin/ctop
+
 # 需要安装的软件列表
 apps="vim net-tools git htop"
 
