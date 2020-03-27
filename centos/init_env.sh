@@ -17,7 +17,7 @@ systemctl stop firewalld
 systemctl disable firewalld
 
 echo -e "${GREEN_COLOR}初始化:关闭SELINUX${RES}"
-# 设置当前selinux为permissive
+# 设置当前selinux为permissive 
 setenforce 0
 # 永久关闭selunx
 sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config
