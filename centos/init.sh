@@ -1,5 +1,7 @@
 #! /bin/bash
 
+WORKDIR=$(cd $(dirname $0); pwd)
+
 function log() {
     echo -e "\E[1;32m$1\E[0m"
 }
@@ -15,13 +17,10 @@ systemctl stop firewalld && systemctl disable firewalld
 log 关闭selinux
 setenforce 0 && sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config
 
-
-*************************修改源***********************************
+#*************************修改源***********************************
 
 log yum源切换源阿里云
-
 mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*repo /etc/yum.repos.d/bak
-
 curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 
 log epel源改为阿里云
@@ -30,16 +29,33 @@ yum_install  https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
 sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
 sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
 
+log 创建yum缓存
 yum makecache
 
-*************************安装zsh*********************************
+#*************************安装常用软件*********************************
 
-yum_install util-linux-user git wget htop vim net-tools tmux tar tree vim
+yum_install git 
+yum_install wget 
+yum_install htop 
+yum_install vim 
+yum_install net-tools 
+yum_install tar 
+yum_install tree 
+yum_install vim
+yum_install highlight
 
-*************************安装zsh*********************************
+#*************************安装zsh*********************************
 
+yum_install zsh
+yum_install util-linux-user 
+
+log 变更shell到zsh
+chsh -s $(which zsh)
+
+#export https_proxy='http://192.168.1.215:1087'
 log 安装oh-myzsh
-wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+source ~/.zshrc
 
 log 安装语法高亮
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
@@ -47,7 +63,18 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/p
 log 安装自动补全
 git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-*************************配置tmux*********************************
+sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
+source ~/.zshrc
 
-git clone https://github.com/gpakosz/.tmux.git $HOME
-cd && ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local 
+#log 安装powerlevel10k主题
+#git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+
+#*************************配置tmux*********************************
+
+yum_install tmux 
+cd && git clone https://github.com/gpakosz/.tmux.git
+ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .
+
+#*************************安装配置FZF*********************************
+
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
