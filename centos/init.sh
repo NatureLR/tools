@@ -1,5 +1,7 @@
 #! /bin/bash
 
+ROOTPATH=$HOME/linux-config
+
 function log() {
     echo -e "\E[1;32m$1\E[0m"
 }
@@ -63,7 +65,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/p
 log 安装自动补全
 git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-cp ../zsh/zshrc.conf ~/.zshrc
+cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
 #sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
 
@@ -76,7 +78,7 @@ source ~/.zshrc
 
 yum_install tmux 
 cd && git clone https://github.com/gpakosz/.tmux.git
-ln -s -f .tmux/.tmux.conf && cp ~/linux-config/tmux/tmux.conf .tmux.conf.local
+ln -s -f .tmux/.tmux.conf && cp $ROOTPATH/tmux/tmux.conf .tmux.conf.local
 
 #*************************安装fzf*********************************
 
@@ -88,5 +90,6 @@ wget https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.
 yum_install containerd.io-1.2.6-3.3.el7.x86_64.rpm
 sudo curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 sudo usermod -aG docker $USER
+mkdir /etc/docker/ && cp $ROOTPATH/docker/daemon.json /etc/docker/
 sudo systemctl start docker
 sudo systemctl enable docker
