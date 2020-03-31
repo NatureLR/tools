@@ -1,7 +1,5 @@
 #! /bin/bash
 
-WORKDIR=$(cd $(dirname $0); pwd)
-
 function log() {
     echo -e "\E[1;32m$1\E[0m"
 }
@@ -52,7 +50,9 @@ yum_install util-linux-user
 log 变更shell到zsh
 chsh -s $(which zsh)
 
+# 需要翻墙不然可能会连接失败
 #export https_proxy='http://192.168.1.215:1087'
+
 log 安装oh-myzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 source ~/.zshrc
@@ -63,7 +63,10 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/p
 log 安装自动补全
 git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
-sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
+cp ../zsh/zshrc.conf ~/.zshrc
+
+#sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
+
 source ~/.zshrc
 
 #log 安装powerlevel10k主题
@@ -73,8 +76,17 @@ source ~/.zshrc
 
 yum_install tmux 
 cd && git clone https://github.com/gpakosz/.tmux.git
-ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .
+ln -s -f .tmux/.tmux.conf && cp ~/linux-config/tmux/tmux.conf .tmux.conf.local
 
-#*************************安装配置FZF*********************************
+#*************************安装fzf*********************************
 
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
+
+#*************************安装配置docker*********************************
+
+wget https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm 
+yum_install containerd.io-1.2.6-3.3.el7.x86_64.rpm
+sudo curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+sudo systemctl start docker
+sudo systemctl enable docker
