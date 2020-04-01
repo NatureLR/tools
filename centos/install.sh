@@ -11,6 +11,9 @@ function yum_install() {
     yum -y install $1 >> log
 }
 
+# 执行目录在home目录
+cd 
+
 log 关闭firewall防火墙
 systemctl stop firewalld && systemctl disable firewalld
 
@@ -41,8 +44,11 @@ yum_install vim
 yum_install net-tools 
 yum_install tar 
 yum_install tree 
-yum_install vim
 yum_install highlight
+
+#*************************安装fzf*********************************
+
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
 
 #*************************安装zsh*********************************
 
@@ -63,7 +69,7 @@ log 安装语法高亮
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
 log 安装自动补全
-git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
 cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
@@ -77,12 +83,8 @@ source ~/.zshrc
 #*************************配置tmux*********************************
 
 yum_install tmux 
-cd && git clone https://github.com/gpakosz/.tmux.git
+git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
 ln -s -f .tmux/.tmux.conf && cp $ROOTPATH/tmux/tmux.conf .tmux.conf.local
-
-#*************************安装fzf*********************************
-
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
 
 #*************************安装配置docker*********************************
 
