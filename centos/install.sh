@@ -2,6 +2,9 @@
 
 ROOTPATH=$HOME/linux-config
 
+# 执行目录在home目录
+cd 
+
 function log() {
     echo -e "\E[1;32m$1\E[0m"
 }
@@ -10,9 +13,6 @@ function yum_install() {
     log 安装$1
     yum -y install $1 >> log
 }
-
-# 执行目录在home目录
-cd 
 
 log 关闭firewall防火墙
 systemctl stop firewalld && systemctl disable firewalld
@@ -66,10 +66,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 source ~/.zshrc
 
 log 安装语法高亮
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
 log 安装自动补全
-git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
