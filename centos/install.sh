@@ -93,5 +93,4 @@ yum_install containerd.io-1.2.6-3.3.el7.x86_64.rpm
 sudo curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 sudo usermod -aG docker $USER
 mkdir /etc/docker/ && cp $ROOTPATH/docker/daemon.json /etc/docker/
-sudo systemctl start docker
-sudo systemctl enable docker
+sudo systemctl start docker && sudo systemctl enable docker
