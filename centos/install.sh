@@ -45,6 +45,7 @@ yum_install net-tools
 yum_install tar 
 yum_install tree 
 yum_install highlight
+yum_install make
 
 #*************************安装fzf*********************************
 
