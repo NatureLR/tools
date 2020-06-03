@@ -9,3 +9,7 @@
 * 最大镜像同时上传下载数为10个
 
 * 存储驱动为verlay2
+
+## 常用命令
+
+* docker volume rm $(docker volume ls -qf dangling=true) 清理无用volume
