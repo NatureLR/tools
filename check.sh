@@ -1,7 +1,7 @@
 #! /bin/bash
 # 检查一些命令是否安装
 
-function log {
+log() {
     logfile=./log
     msg="`date +'%F %H:%M:%S'`\t[$1]\t$2\033[0m"
 
@@ -15,21 +15,18 @@ function log {
     esac
 }
 
-function checkCMD() {
-    if type $1  >/dev/null 2>&1; then
-        log info "工具 $1 安装成功"
+checkCMD() {
+
+for v in $*
+do   
+    if type $v  >/dev/null 2>&1; then
+        log info "工具 $v 安装成功"
     else 
-        log error "工具 $1 安装失败"
+        log error "工具 $v 安装失败"
     fi
+done
 }
 
 ########################需要检查的命令列表############################
 
-checkCMD zsh 
-checkCMD fzf
-checkCMD tmux
-checkCMD htop
-checkCMD make
-checkCMD vim
-checkCMD docker
-checkCMD tar
+checkCMD zsh fzf tmux htop make vim docker tar
