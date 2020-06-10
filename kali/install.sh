@@ -24,7 +24,7 @@ install htop fzf highlight
 ##*************************安装zsh***********************************
 
 log 安装oh-myzsh
-sh -c "$(curl -fsSL --retry 10 --connect-timeout 3  https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL --retry 10 --connect-timeout 3 https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 log 安装语法高亮
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting >>log 2>&1 
