@@ -1,18 +1,20 @@
+# 为centos最小化安装的环境脚本
 #! /bin/bash
 
 ROOTPATH=$HOME/linux-config
 
 # 执行目录在home目录
-cd 
+cd ~
 
-function log() {
-    echo -e "\E[1;32m$1\E[0m"
+log() {
+    echo -e "\033[1;32m$1\033[0m"
 }
 
-function yum_install() {
+install() {
     log 安装$1
     yum -y install $1 >> log
 }
+
 
 log 关闭firewall防火墙
 systemctl stop firewalld && systemctl disable firewalld
@@ -27,7 +29,7 @@ mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*repo /etc/yum.repos.d/bak
 curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 
 log epel源改为阿里云
-yum_install  https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
+install  https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
 
 sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
 sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
@@ -37,15 +39,15 @@ yum makecache
 
 #*************************安装常用软件*********************************
 
-yum_install git 
-yum_install wget 
-yum_install htop 
-yum_install vim 
-yum_install net-tools 
-yum_install tar 
-yum_install tree 
-yum_install highlight
-yum_install make
+install git 
+install wget 
+install htop 
+install vim 
+install net-tools 
+install tar 
+install tree 
+install highlight
+install make
 
 #*************************安装fzf*********************************
 
@@ -53,8 +55,8 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 
 #*************************安装zsh*********************************
 
-yum_install zsh
-yum_install util-linux-user 
+install zsh
+install util-linux-user 
 
 log 变更shell到zsh
 chsh -s $(which zsh)
@@ -64,7 +66,6 @@ chsh -s $(which zsh)
 
 log 安装oh-myzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-source ~/.zshrc
 
 log 安装语法高亮
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
@@ -74,8 +75,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/cust
 
 cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
-#sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
-
 source ~/.zshrc
 
 #log 安装powerlevel10k主题
@@ -83,14 +82,14 @@ source ~/.zshrc
 
 #*************************配置tmux*********************************
 
-yum_install tmux 
+install tmux 
 git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
 ln -s -f .tmux/.tmux.conf && cp $ROOTPATH/tmux/tmux.conf .tmux.conf.local
 
 #*************************安装配置docker*********************************
 
 wget https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm 
-yum_install containerd.io-1.2.6-3.3.el7.x86_64.rpm
+install containerd.io-1.2.6-3.3.el7.x86_64.rpm
 sudo curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 sudo usermod -aG docker $USER
 mkdir /etc/docker/ && cp $ROOTPATH/docker/daemon.json /etc/docker/

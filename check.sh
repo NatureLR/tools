@@ -7,7 +7,7 @@ log() {
 
     case $1 in 
         info)
-            echo -e "\033[32m"$msg | tee -a $logfile;;
+            echo -e "\033[32m$msg" | tee -a $logfile;;
         warn)
             echo -e "\033[33m$msg" | tee -a $logfile;;
         error)
@@ -17,12 +17,11 @@ log() {
 
 checkCMD() {
 
-for v in $*
-do   
+for v in $*;do   
     if type $v  >/dev/null 2>&1; then
         log info "工具 $v 安装成功"
     else 
-        log error "工具 $v 安装失败"
+        log error "工具 $v 未安装"
     fi
 done
 }
