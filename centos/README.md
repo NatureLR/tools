@@ -30,11 +30,11 @@
 
 ## 安装zsh
 
-1. yum -y install zsh util-linux-user 
+1. yum -y install zsh util-linux-user
 
 2. chsh -s $(which zsh)
 
-3. sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+3. sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 3. git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
