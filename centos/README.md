@@ -2,7 +2,7 @@
 
 此项配置为centos最小化安装的环境配置主要为了试验性质而非生产
 
-## 关闭安管设置
+## 关闭安全设置
 
 1. systemctl stop firewalld && systemctl disable firewalld
 
@@ -26,8 +26,6 @@
 
 1. yum -y install  git wget htop vim net-tools tar tree highligh make
 
-2. git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
-
 ## 安装zsh
 
 1. yum -y install zsh util-linux-user
@@ -43,6 +41,10 @@
 4. cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
 5. source ~/.zshrc
+
+## FZF
+
+1. git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
 
 ## tmux
 
