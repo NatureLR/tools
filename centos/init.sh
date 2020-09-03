@@ -3,9 +3,6 @@
 
 ROOTPATH=$HOME/linux-config
 
-# 执行目录在home目录
-cd ~
-
 log() {
     echo -e "\033[1;32m$1\033[0m"
 }
@@ -15,7 +12,10 @@ install() {
     yum -y install $1 >> log
 }
 
+# 执行目录在home目录
+cd ~ 
 
+#*************************安全策略***********************************
 log 关闭firewall防火墙
 systemctl stop firewalld && systemctl disable firewalld
 
@@ -26,16 +26,18 @@ setenforce 0 && sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/c
 
 log yum源切换源阿里云
 mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*repo /etc/yum.repos.d/bak
-curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+curl -s -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 
-log epel源改为阿里云
 install  https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
-
 sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
 sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
 
 log 创建yum缓存
 yum makecache
+#*************************日志策略*********************************
+
+journalctl --vacuum-time=3d
+journalctl --vacuum-size=1000M
 
 #*************************安装常用软件*********************************
 
@@ -48,6 +50,7 @@ install tar
 install tree 
 install highlight
 install make
+install chrony
 
 #*************************安装fzf*********************************
 
@@ -62,7 +65,7 @@ log 变更shell到zsh
 chsh -s $(which zsh)
 
 # 需要翻墙不然可能会连接失败
-#export https_proxy='http://192.168.1.215:1087'
+export http_proxy=http://192.168.1.85:1087;export https_proxy=http://192.168.1.85:1087
 
 log 安装oh-myzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -77,6 +80,7 @@ cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
 source ~/.zshrc
 
+unset http_proxy;unset https_proxy
 #log 安装powerlevel10k主题
 #git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
 
@@ -88,9 +92,8 @@ ln -s -f .tmux/.tmux.conf && cp $ROOTPATH/tmux/tmux.conf .tmux.conf.local
 
 #*************************安装配置docker*********************************
 
-wget https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm 
-install containerd.io-1.2.6-3.3.el7.x86_64.rpm
-sudo curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+install https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm 
+sudo curl -fsSL https://get.docker.com | sh
 sudo usermod -aG docker $USER
 mkdir /etc/docker/ && cp $ROOTPATH/docker/daemon.json /etc/docker/
 sudo systemctl start docker && sudo systemctl enable docker
