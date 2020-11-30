@@ -65,7 +65,7 @@ log 变更shell到zsh
 chsh -s $(which zsh)
 
 # 需要翻墙不然可能会连接失败
-export http_proxy=http://192.168.1.85:1087;export https_proxy=http://192.168.1.85:1087
+# export http_proxy=http://192.168.1.85:1087;export https_proxy=http://192.168.1.85:1087
 
 log 安装oh-myzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
