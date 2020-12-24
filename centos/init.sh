@@ -80,7 +80,7 @@ cp $ROOTPATH/zsh/zshrc.conf ~/.zshrc
 
 source ~/.zshrc
 
-unset http_proxy;unset https_proxy
+#unset http_proxy;unset https_proxy
 #log 安装powerlevel10k主题
 #git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
 
