@@ -16,14 +16,13 @@ log() {
 }
 
 checkCMD() {
-
-for v in $*;do   
-    if type $v  >/dev/null 2>&1; then
-        log info "工具 $v 安装成功"
-    else 
-        log error "工具 $v 未安装"
-    fi
-done
+    for v in $*;do   
+        if type $v  >/dev/null 2>&1; then
+            log info "工具 $v 安装成功"
+        else 
+            log error "工具 $v 未安装"
+        fi
+    done
 }
 
 ########################需要检查的命令列表############################
