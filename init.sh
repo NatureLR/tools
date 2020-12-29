@@ -1,101 +1,131 @@
 #!/usr/bin/env bash
 
-set -e 
+set -e
 
 # 输出日志
 log() {
     logfile=./log
-    msg="`date +'%F %H:%M:%S'`\t[$1]\t$2\033[0m"
+    msg="$(date +'%F %H:%M:%S')\t[$1]\t$2\033[0m"
 
-    case $1 in 
-        info)
-            echo -e "\033[32m$msg" | tee -a $logfile;;
-        warn)
-            echo -e "\033[33m$msg" | tee -a $logfile;;
-        err)
-            echo -e "\033[31m$msg" | tee -a $logfile;;
-        *)
-            echo -e "\033[32m$msg" | tee -a $logfile;;
+    case $1 in
+    info)
+        echo -e "\033[32m$msg" | tee -a $logfile
+        ;;
+    warn)
+        echo -e "\033[33m$msg" | tee -a $logfile
+        ;;
+    err)
+        echo -e "\033[31m$msg" | tee -a $logfile
+        ;;
+    *)
+        echo -e "\033[32m$msg" | tee -a $logfile
+        ;;
     esac
 }
 
 # 获取操作系统
 get_os() {
-    os=$(cat /etc/*-release |grep ^ID=  |awk -F '=' '{print$2}'| sed 's/\"//g')
-    os_version=$(cat /etc/*-release |grep ^VERSION_ID=  |awk -F '=' '{print$2}'| sed 's/\"//g')
+    os=$(cat /etc/*-release | grep ^ID= | awk -F '=' '{print$2}' | sed 's/\"//g')
+    os_version=$(cat /etc/*-release | grep ^VERSION_ID= | awk -F '=' '{print$2}' | sed 's/\"//g')
     os=$os$os_version
     log info 当前系统为：$os
 }
 
 # 系统包管理程序安装
 install() {
-    case $os in 
-        centos*)
-        install_cmd="yum install -y";;
-        ubuntu*)
-        install_cmd="apt install -y";;
-        alpine*)
-        install_cmd="apk add";;
+    case $os in
+    centos*)
+        install_cmd="yum install -y"
+        ;;
+    ubuntu*)
+        install_cmd="apt install -y"
+        ;;
+    alpine*)
+        install_cmd="apk add"
+        ;;
     esac
 
-    for app in $*;do
-       log 安装$app
-       $install_cmd $app 
+    for app in $*; do
+        log 安装$app
+        $install_cmd $app
     done
 }
 
 # 防火墙设置
-firewall(){
+firewall() {
     log info 关闭firewall防火墙
-    case $os in 
-        centos*)
-            systemctl stop firewalld && systemctl disable firewalld;;
+    case $os in
+    centos*)
+        systemctl stop firewalld && systemctl disable firewalld
+        ;;
     esac
 }
 
-selinux(){
+selinux() {
     log info 关闭selinux
-    case $os in 
-        centos*)
-            setenforce 0 && sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config;;
-    esac     
+    case $os in
+    centos*)
+        setenforce 0 && sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config
+        ;;
+    esac
 }
 
 # 包管理工具源修改
-package_managers_source(){
-    case $os in 
-        centos8)
-            # centos8
-            log info yum源切换源阿里云
-            mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*repo /etc/yum.repos.d/bak
-            curl -s -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
-            install  https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
-            sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
-            sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
-            log 创建yum缓存
-            yum makecache
+package_managers_source() {
+    case $os in
+    centos8)
+        # centos8
+        log info yum源切换源阿里云
+        mkdir /etc/yum.repos.d/bak && mv /etc/yum.repos.d/*repo /etc/yum.repos.d/bak
+        curl -s -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+        install https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
+        sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
+        sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
+        log 创建yum缓存
+        yum makecache
         ;;
-        ubuntu)
-        ;;
-        alpine)
-        ;;
-        *)
-            log err 不支持的操作系统！
+    ubuntu) ;;
+
+    alpine) ;;
+
+    *)
+        log err 不支持的操作系统！
         ;;
     esac
 }
 
-fzf(){
-    log info 安装fzf
-    case $os in 
-        centos*)
-            SHELL=/usr/bin/zsh git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all;;
-    esac     
+# 由于顺序问题fzf安装时没有zsh没法
+fzf_conf() {
+cat >~/.fzf.zsh <<EOF
+# Setup fzf
+# ---------
+if [[ ! "$PATH" == */root/.fzf/bin* ]]; then
+  export PATH="${PATH:+${PATH}:}/root/.fzf/bin"
+fi
+
+# Auto-completion
+# ---------------
+[[ $- == *i* ]] && source "/root/.fzf/shell/completion.zsh" 2> /dev/null
+
+# Key bindings
+# ------------
+source "/root/.fzf/shell/key-bindings.zsh"
+EOF
 }
 
-zsh_conf(){
-log 安装zsh配置文件
-cat >~/.zshrc <<EOF
+fzf() {
+    log info 安装fzf
+    case $os in
+    centos*)        
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
+        fzf_conf
+        ;;
+    esac
+}
+
+zsh_conf() {
+    log 安装zsh配置文件
+    cat >~/.zshrc <<EOF
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -215,7 +245,7 @@ export PATH=$PATH:$GOBIN
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
+# For a full list of active aliases, run $(alias).
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -238,33 +268,33 @@ alias fzfv="fzf --height 80% --layout=reverse --preview '(highlight -O ansi {} |
 EOF
 }
 
-zsh(){
+zsh() {
     log info 安装并配置ZSH
-    case $os in 
-        centos8)
-            install zsh which
-            install util-linux-user 
+    case $os in
+    centos8)
+        install zsh which
+        install util-linux-user
 
-            log  变更shell到zsh
-            chsh -s $(which zsh)
+        log 变更shell到zsh
+        chsh -s $(which zsh)
 
-            log 安装oh-myzsh
-            sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        log 安装oh-myzsh
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-            log 安装语法高亮
-            git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        log 安装语法高亮
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-            log 安装自动补全
-            git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        log 安装自动补全
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
-            zsh_conf
-            $(which zsh)
+        zsh_conf
+        $(which zsh)
         ;;
     esac
 }
 
-tmux_conf(){
-cat > ~/.tmux.conf.local <<EOF
+tmux_conf() {
+    cat >~/.tmux.conf.local <<EOF
 # https://github.com/gpakosz/.tmux
 # (‑●‑●)> dual licensed under the WTFPL v2 license and the MIT license,
 #         without any warranty.
@@ -564,21 +594,21 @@ set -g mouse on
 EOF
 }
 
-tmux(){
+tmux() {
     log info 安装tmux
-    case $os in 
-        centos*)
-            install tmux
-            git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
-            ln -s -f .tmux/.tmux.conf
-            tmux_conf
+    case $os in
+    centos*)
+        install tmux
+        git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
+        ln -s -f .tmux/.tmux.conf
+        tmux_conf
         ;;
     esac
 }
 
-vim(){
-log info 配置vim
-cat >~/.zshrc <<EOF
+vim_conf() {
+    log info 配置vim
+    cat >~/.vimrc <<EOF
 syntax on " 高亮
 syntax enable
 set number " 显示行号
@@ -590,8 +620,8 @@ set showmatch      " 设置匹配模式
 EOF
 }
 
-docker_conf(){
-cat >/etc/docker/daemon.json <<EOF
+docker_conf() {
+    cat >/etc/docker/daemon.json <<EOF
 {
     "oom-score-adjust": -1000,
     "log-driver": "json-file",
@@ -608,11 +638,11 @@ cat >/etc/docker/daemon.json <<EOF
         "overlay2.override_kernel_check=true"
     ]
 }
-EOF  
+EOF
 }
 
-docker(){
-    install https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm 
+docker() {
+    install https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
     curl -fsSL https://get.docker.com | sh
     usermod -aG docker $USER
     mkdir /etc/docker/
@@ -621,33 +651,31 @@ docker(){
 }
 
 # 常用软件
-app(){
+app() {
     # 公共安装
     install git wget htop vim net-tools tar tree highlight make chrony
 }
 
-main(){
-get_os
+main() {
+    get_os
 
-# 安全设置,容器中和生产环境不需要执行
-#selinux
-#firewall
+    # 安全设置,容器中和生产环境不需要执行
+    #selinux
+    #firewall
 
-# 软件源
-package_managers_source
-yum -y install git
+    # 软件源
+    package_managers_source
+    yum -y install git
 
-# 常用软件安装
-#app
+    # 常用软件安装
+    #app
 
-# 命令行相关
-tmux
-vim
-fzf
-zsh
-
-#docker
-
+    # 命令行相关
+    tmux
+    vim_conf
+    fzf
+    zsh
+    #docker
 }
 
 main "$@"
