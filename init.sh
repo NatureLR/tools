@@ -96,7 +96,7 @@ package_managers_source() {
 
 # 由于顺序问题fzf安装时没有zsh没法
 fzf_conf() {
-cat >~/.fzf.zsh <<EOF
+    cat >~/.fzf.zsh <<EOF
 # Setup fzf
 # ---------
 if [[ ! "$PATH" == */root/.fzf/bin* ]]; then
@@ -116,7 +116,7 @@ EOF
 fzf() {
     log info 安装fzf
     case $os in
-    centos*)        
+    centos*)
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
         fzf_conf
         ;;
@@ -660,21 +660,20 @@ main() {
     get_os
 
     # 安全设置,容器中和生产环境不需要执行
-    #selinux
-    #firewall
+    selinux
+    firewall
 
     # 软件源
     package_managers_source
-    yum -y install git
 
     # 常用软件安装
     #app
-
     # 命令行相关
     tmux
     vim_conf
     fzf
     zsh
+
     #docker
 }
 
