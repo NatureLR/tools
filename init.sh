@@ -51,6 +51,12 @@ install() {
     done
 }
 
+# 常用软件
+app() {
+    # 公共安装
+    install git wget htop vim net-tools tar tree highlight make chrony the_silver_searcher
+}
+
 # 防火墙设置
 firewall() {
     log info 关闭firewall防火墙
@@ -650,12 +656,6 @@ docker() {
     systemctl start docker && systemctl enable docker
 }
 
-# 常用软件
-app() {
-    # 公共安装
-    install git wget htop vim net-tools tar tree highlight make chrony
-}
-
 main() {
     get_os
 
@@ -667,7 +667,6 @@ main() {
     package_managers_source
 
     # 常用软件安装
-    #app
     # 命令行相关
     tmux
     vim_conf
