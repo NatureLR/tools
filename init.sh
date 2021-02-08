@@ -59,18 +59,18 @@ app() {
 
 # 防火墙设置
 firewall() {
-    log info 关闭firewall防火墙
     case $os in
     centos*)
+        log info 关闭firewall防火墙
         systemctl stop firewalld && systemctl disable firewalld
         ;;
     esac
 }
 
 selinux() {
-    log info 关闭selinux
     case $os in
     centos*)
+        log info 关闭selinux
         setenforce 0 && sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config
         ;;
     esac
@@ -102,20 +102,21 @@ package_managers_source() {
 
 # 由于顺序问题fzf安装时没有zsh没法
 fzf_conf() {
+    log info 生成fzf_conf
     cat >~/.fzf.zsh <<EOF
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */root/.fzf/bin* ]]; then
-  export PATH="${PATH:+${PATH}:}/root/.fzf/bin"
+if [[ ! "$PATH" == */$USER/.fzf/bin* ]]; then
+  export PATH="${PATH:+${PATH}:}/$USER/.fzf/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "/root/.fzf/shell/completion.zsh" 2> /dev/null
+[[ $- == *i* ]] && source "/$USER/.fzf/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
 # ------------
-source "/root/.fzf/shell/key-bindings.zsh"
+source "/$USER/.fzf/shell/key-bindings.zsh"
 EOF
 }
 
@@ -300,6 +301,7 @@ zsh() {
 }
 
 tmux_conf() {
+    log info 生成tmux.conf.local
     cat >~/.tmux.conf.local <<EOF
 # https://github.com/gpakosz/.tmux
 # (‑●‑●)> dual licensed under the WTFPL v2 license and the MIT license,
@@ -627,6 +629,7 @@ EOF
 }
 
 docker_conf() {
+    log info 生成docker配置
     cat >/etc/docker/daemon.json <<EOF
 {
     "oom-score-adjust": -1000,
@@ -648,6 +651,7 @@ EOF
 }
 
 docker() {
+    log info 安装docker
     install https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
     curl -fsSL https://get.docker.com | sh
     usermod -aG docker $USER
@@ -657,6 +661,7 @@ docker() {
 }
 
 git_conf() {
+    log info 配置git
     git config --global alias.co checkout
     git config --global alias.br branch
     git config --global alias.ci commit
