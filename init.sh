@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+#set -x
 
 # 输出日志
 log() {
@@ -53,8 +54,20 @@ install() {
 
 # 常用软件
 app() {
+    case $os in
+    centos*)
+        install the_silver_searcher chrony
+        ;;
+    ubuntu*)
+        install silversearcher-ag
+        ;;
+    alpine*)
+        install_cmd="apk add"
+        ;;
+    esac
+
     # 公共安装
-    install git wget htop vim net-tools tar tree highlight make chrony the_silver_searcher
+    install git curl wget htop vim net-tools tar tree highlight make
 }
 
 # 防火墙设置
@@ -90,8 +103,11 @@ package_managers_source() {
         log 创建yum缓存
         yum makecache
         ;;
-    ubuntu) ;;
-
+    ubuntu*)
+        log info apt源切换源阿里云
+        sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
+        apt update
+        ;;
     alpine) ;;
 
     *)
@@ -106,17 +122,17 @@ fzf_conf() {
     cat >~/.fzf.zsh <<EOF
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */$USER/.fzf/bin* ]]; then
-  export PATH="${PATH:+${PATH}:}/$USER/.fzf/bin"
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  export PATH="${PATH:+${PATH}:}/$HOME/.fzf/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "/$USER/.fzf/shell/completion.zsh" 2> /dev/null
+[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
 # ------------
-source "/$USER/.fzf/shell/key-bindings.zsh"
+source "$HOME/.fzf/shell/key-bindings.zsh"
 EOF
 }
 
@@ -127,6 +143,8 @@ fzf() {
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
         fzf_conf
         ;;
+    ubuntu*)
+        apt install fzf
     esac
 }
 
@@ -278,26 +296,27 @@ EOF
 zsh() {
     log info 安装并配置ZSH
     case $os in
-    centos8)
-        install zsh which
-        install util-linux-user
-
-        log 变更shell到zsh
-        chsh -s $(which zsh)
-
-        log 安装oh-myzsh
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
-        log 安装语法高亮
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
-        log 安装自动补全
-        git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-
-        zsh_conf
-        $(which zsh)
+    centos*)
+        install which util-linux-user;;
+    ubuntu*)
         ;;
     esac
+
+    install zsh 
+    log 变更shell到zsh
+    chsh -s $(which zsh)
+
+    log 安装oh-myzsh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+    log 安装语法高亮
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+    log 安装自动补全
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+    zsh_conf
+    $(which zsh)
 }
 
 tmux_conf() {
@@ -605,10 +624,10 @@ EOF
 tmux() {
     log info 安装tmux
     case $os in
-    centos*)
+    centos* | ubuntu*)
         install tmux
         git clone https://github.com/gpakosz/.tmux.git $HOME/.tmux
-        ln -s -f .tmux/.tmux.conf
+        ln -s -f ~/.tmux/.tmux.conf ~
         tmux_conf
         ;;
     esac
@@ -677,9 +696,10 @@ main() {
 
     # 软件源
     package_managers_source
-    git_conf
 
     # 常用软件安装
+    app
+    git_conf
     # 命令行相关
     tmux
     vim_conf

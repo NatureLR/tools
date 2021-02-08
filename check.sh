@@ -30,4 +30,4 @@ checkCMD() {
 
 ########################需要检查的命令列表############################
 
-checkCMD zsh fzf tmux htop make vim docker tar
+checkCMD zsh fzf tmux htop make vim docker tar ag
