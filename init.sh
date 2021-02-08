@@ -656,6 +656,13 @@ docker() {
     systemctl start docker && systemctl enable docker
 }
 
+git_conf() {
+    git config --global alias.co checkout
+    git config --global alias.br branch
+    git config --global alias.ci commit
+    git config --global alias.st status
+}
+
 main() {
     get_os
 
@@ -665,6 +672,7 @@ main() {
 
     # 软件源
     package_managers_source
+    git_conf
 
     # 常用软件安装
     # 命令行相关
