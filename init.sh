@@ -659,7 +659,7 @@ docker_conf() {
     },
     "max-concurrent-downloads": 10,
     "max-concurrent-uploads": 10,
-    "bip": "169.254.123.1/24",
+    "bip": "192.168.222.1/24",
     "registry-mirrors": ["http://hub-mirror.c.163.com"],
     "storage-driver": "overlay2",
     "storage-opts": [
