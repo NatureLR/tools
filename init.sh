@@ -687,16 +687,13 @@ git_conf() {
     git config --global alias.st status
 }
 
-main() {
+install_all() {
     get_os
-
     # 安全设置,容器中和生产环境不需要执行
     selinux
     firewall
-
     # 软件源
     package_managers_source
-
     # 常用软件安装
     app
     git_conf
@@ -705,8 +702,42 @@ main() {
     vim_conf
     fzf
     zsh
-
     #docker
+}
+
+main(){
+    case $1 in
+    selinux)
+        selinux
+    ;;
+    firewall)
+        firewall
+    ;;
+    cni)
+        cni
+    ;;
+    package-managers)
+        package_managers_source
+    ;;
+     app)
+        app
+    ;;   
+    git-conf)
+        git_conf
+    ;;
+    vim-conf)
+        vim_conf
+    ;;
+    fzf)
+        fzf
+    ;;
+    zsh)
+        zsh
+    ;;
+    *)
+        install_all
+    ;;
+    esac
 }
 
 main "$@"
