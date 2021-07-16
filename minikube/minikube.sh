@@ -114,15 +114,43 @@ install(){
 
 # 因为macos的网络限制只能使用端口转发
 port_forward(){
-    kubectl port-forward -n cattle-system svc/rancher 8080:80 8443:443
-    kubectl port-forward -n kube-system   svc/hubble-ui --address 0.0.0.0 --address :: 12000:80
+    kubectl port-forward -n cattle-system svc/rancher 8080:80 8443:443 > /dev/null 2>&1 &
+    kubectl port-forward -n kube-system   svc/hubble-ui --address 0.0.0.0 --address :: 12000:80 > /dev/null 2>&1 &
+}
+
+
+install_all(){
+    install
+    cni
+    cert_manager
+    rancher
+}
+
+help(){
+    echo  ' ================================================================ '
+    echo  ' 默认安装minikube配置为4c8g，cni使用cilium，安装rancher'
+    echo  ' minikube.sh 全部安装'
+    echo  ' minikube.sh port-forward 端口转发rancher和hubble'
 }
 
 main(){
-    #install
-    #cni
-    #cert_manager
-    rancher
+    case $1 in
+    certmanager)
+        cert_manager
+    ;;
+    rancher)
+        rancher
+    ;;
+    cni)
+        cni
+    ;;
+    port-forward)
+        port_forward
+    ;;
+    *)
+        install_all
+    ;;
+    esac
 }
 
 main "$@"
