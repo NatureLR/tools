@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+;关闭幽灵熔断
+
+[Hkey_LOCAL_MACHINESYSTEMCurrentControlSetControlSession ManagerMemory Management]
+
+"FeatureSettingsOverride"=dword:00000003
+
+"FeatureSettingsOverrideMask"=dword:00000003

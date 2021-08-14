@@ -1,0 +1,1 @@
+@echo off taskkill /f /im explorer.exeCD /d %userprofile%\AppData\LocalDEL IconCache.db /astart explorer.exeecho 执行完成
