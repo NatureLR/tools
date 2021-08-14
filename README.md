@@ -8,3 +8,6 @@
 - fzfv 预览文件
 - C-R fzf检索历史命令
 - tmux状态栏优化
+
+
+export http_proxy=http://192.168.233.20:10809;export https_proxy=http://192.168.233.20:10809;
