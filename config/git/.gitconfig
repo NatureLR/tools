@@ -1,0 +1,8 @@
+[alias]
+        co = checkout
+        br = branch
+        ci = commit
+        st = status
+[user]
+        name = NatureLR
+        email = 1127711564@qq.com
