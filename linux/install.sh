@@ -214,19 +214,19 @@ git_conf() {
 install_all() {
     get_os
     # 安全设置,容器中和生产环境不需要执行
-    #selinux
-    #firewall
+    selinux
+    firewall
     # 软件源
-    #package_managers_source
+    package_managers_source
     # 常用软件安装
-    #app
+    app
     git_conf
     # 命令行相关
     tmux
     vim_conf
     fzf
     zsh
-    #docker
+    docker
 }
 
 main(){
