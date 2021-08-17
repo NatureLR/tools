@@ -106,7 +106,7 @@ unsetopt share_history
 # export ARCHFLAGS="-arch x86_64"
 
 # mac 下目录显示颜色
-export LSCOLORS="exfxcxdxbxexexabagacad"
+export LSCOLORS="exfxcbdxCxexexabagacad"
 
 # Go环境变量
 export GOPATH=$HOME/go
