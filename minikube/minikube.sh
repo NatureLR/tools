@@ -35,9 +35,9 @@ rancher(){
     # 安装rancher
     helm install rancher rancher-latest/rancher \
      --namespace cattle-system \
+     --set replicas=1 \
      --set hostname=rancher.naturelr.cc
     
-    kubectl -n cattle-system scale deployment rancher  --replicas 1 
     kubectl -n cattle-system rollout status deployment rancher
 }
 
