@@ -200,7 +200,7 @@ docker_conf() {
 docker() {
     log info 安装docker
     install https://download.docker.com/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
-    curl -fsSL https://get.docker.com | sh
+    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
     usermod -aG docker $USER
     mkdir /etc/docker/
     docker_conf
