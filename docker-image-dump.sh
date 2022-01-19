@@ -7,7 +7,9 @@ repo="hub.docker.com"
 
 name=`echo $1 |awk -F "/" '{print$2}'`
 
-$repotag=$repo/$name
+$repotag="$repo/$name"
+
+echo "$1=====>$repotag"
 
 docker pull $1
 docker tag $1 $repotag
