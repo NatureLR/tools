@@ -53,7 +53,7 @@ install() {
 
     for app in $*; do
         log 安装$app
-        $install_cmd $app
+        $install_cmd $app 
     done
 }
 

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: sonarqube
+  name: sonarqube
+  namespace: prj-uaek
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube
+  serviceName: sonarqube
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+      annotations:
+        cni.networking.kun/ipv4Enabled: "true"
+    spec:
+      containers:
+      - image: sonarqube:community
+        imagePullPolicy: Always
+        #command:
+        #- sleep
+        #- 1h
+        name: sonarqube
+        resources: {}
+        env:
+        - name: SONAR_ES_BOOTSTRAP_CHECKS_DISABLE
+          value: "true"
+        ports:
+        - containerPort: 9000
+          name: web
+        volumeMounts:
+        - mountPath: /opt/sonarqube/data
+          name: data
+        - mountPath: /opt/sonarqube/extensions
+          name: data
+        - mountPath: /opt/sonarqube/conf/
+          name: config
+      volumes:
+      - configMap:
+          defaultMode: 493
+          name: sonarqube-config
+          optional: false
+        name: config
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      volumeMode: Filesystem

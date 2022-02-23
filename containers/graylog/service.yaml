@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog
+  namespace: logging
+spec:
+  selector:
+   app: graylog
+  type: ClusterIP
+  ports:
+  - name: web-graylog
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  - name: syslog-tcp-graylog
+    port: 1514
+    protocol: TCP
+    targetPort: 1514
+  - name: syslog-udp-graylog
+    port: 1514
+    protocol: UDP
+    targetPort: 1514
+  - name: gelf-tcp-graylog
+    port: 12201
+    protocol: TCP
+    targetPort: 12201
+  - name: gelf-udp-graylog
+    port: 12201
+    protocol: UDP
+    targetPort: 12201
+
+

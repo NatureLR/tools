@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sonarqube-postgres
+  namespace: prj-uaek
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube-postgres
+  serviceName: sonarqube-postgres
+  template:
+    metadata:
+      labels:
+        app: sonarqube-postgres
+      annotations:
+        cni.networking.kun/ipv4Enabled: "true"
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: sonarqube
+        - name: POSTGRES_PASSWORD
+          value: "nuzhqFZepMYvJU6T"
+        image: postgres:11.14-bullseye
+        ports:
+        - containerPort: 5432
+          name: tcp
+        imagePullPolicy: Always
+        name: sonarqube-postgres
+        resources: 
+          limits:
+            hugepages-2Mi: 1000Mi
+            cpu: 4
+            memory: 16Gi
+          requests:
+            cpu: 2
+            memory: 4Gi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - name: hugepage
+        emptyDir:
+          medium: HugePages
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+      namespace: prj-uaek
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      volumeMode: Filesystem

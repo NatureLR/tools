@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: graylog
+  name: graylog
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graylog
+  serviceName: graylog
+  template:
+    metadata:
+      labels:
+        app: graylog
+    spec:
+      containers:
+      - env:
+        - name: GRAYLOG_ELASTICSEARCH_HOSTS
+          value: http://10.72.138.168:9200
+        - name: GRAYLOG_HTTP_EXTERNAL_URI
+          value: http://0.0.0.0:9000/
+        # admin admin
+        - name: GRAYLOG_PASSWORD_SECRET
+          value: somepasswordpepper
+        - name: GRAYLOG_ROOT_PASSWORD_SHA2
+          value: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        image: graylog/graylog:4.2
+        imagePullPolicy: Always
+        name: graylog
+        ports:
+        - containerPort: 9000
+          name: web
+          protocol: TCP
+        - containerPort: 1514
+          name: syslog-tcp
+          protocol: TCP
+        - containerPort: 1514
+          name: syslog-udp
+          protocol: UDP
+        - containerPort: 12201
+          name: gelf-tcp
+          protocol: TCP
+        - containerPort: 12201
+          name: gelf-udp
+          protocol: UDP

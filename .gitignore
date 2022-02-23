@@ -1,6 +1,5 @@
 .vscode
-*/*log
-log
+*.log
 test
 test.sh
 .DS_Store
