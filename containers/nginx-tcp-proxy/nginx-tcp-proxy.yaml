@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-tcp-proxy
+spec:
+  selector:
+    matchLabels:
+      app: nginx-tcp-proxy
+  template:
+    metadata:
+      labels:
+        app: nginx-tcp-proxy
+    spec:
+      containers:
+      - name: nginx-tcp-proxy
+        image: jetbrainsinfra/nginx-tcp-proxy:latest
+        env:
+        - name: BACKEND_HOST
+          value: mysql  # 需要代理的后端地址
+        - name: BACKEND_PORT
+          value: "3306" # 需要代理的后端端口
+        - name: LISTEN_PORT
+          value: "3306" # 监听的端口
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3306 # 根据LISTEN_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-tcp-proxy
+spec:
+  selector:
+    app: nginx-tcp-proxy
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: NodePort
