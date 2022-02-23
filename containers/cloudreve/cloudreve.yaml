@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudreve
+spec:
+  selector:
+    matchLabels:
+      app: cloudreve
+  template:
+    metadata:
+      labels:
+        app: cloudreve
+    spec:
+      containers:
+      - name: cloudreve
+        image: xavierniu/cloudreve:latest
+        env:
+        - name: TZ
+          value: '"Asia/Shanghai"'
+        resources: {}
+        ports:
+        - containerPort: 5212
+        volumeMounts:
+        - mountPath: /cloudreve/uploads
+          name: uploads
+        - mountPath: /cloudreve/db
+          name: db
+        - mountPath: /cloudreve/avatar
+          name: avatar
+        - mountPath: /cloudreve/config/
+          name: conf
+      volumes:
+      - hostPath:
+          path: /data/cloudreve/uploads
+          type: ""
+        name: uploads
+      - hostPath:
+          path: /data/cloudreve/db
+          type: ""
+        name: db
+      - hostPath:
+          path: /data/cloudreve/avatar
+          type: ""
+        name: avatar
+      - configMap:
+          defaultMode: 256
+          items:
+          - key: conf
+            path: conf.ini
+          name: cloudreve
+          optional: false
+        name: conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudreve
+spec:
+  selector:
+    app: cloudreve
+  ports:
+  - port: 5212
+    targetPort: 5212
+  type: NodePort
+---
+# cloudreve 支持多种数据库这里使用了最方便的sqlite
+kind: ConfigMap
+metadata:
+  name: cloudreve
+apiVersion: v1
+data:
+  conf: |-
+    [Database]
+    DBFile = /cloudreve/db/cloudreve.db 
