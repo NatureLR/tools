@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    restart: always
+    volumes:
+      - /data/adguardhome/work:/opt/adguardhome/work:rw
+      - /data/adguardhome/conf:/opt/adguardhome/conf:rw
+    network_mode: "host"
