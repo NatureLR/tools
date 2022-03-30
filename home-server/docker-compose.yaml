@@ -43,8 +43,8 @@ services:
       # - TRANSMISSION_WEB_HOME=/combustion-release/
       - TRANSMISSION_WEB_HOME=/transmission-web-control/
       # - TRANSMISSION_WEB_HOME=/kettu/
-      - USER=zxz
-      - PASS=zhang.zhen
+      - USER=admin
+      - PASS=1qaz2wsx
       - PUID=1000
       - PGID=1000
     volumes:
