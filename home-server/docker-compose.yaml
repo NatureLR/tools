@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+#===================================================================
   db:
     image: mariadb:10.7.3  #如若此镜像在你的平台上不可用，可以自行在docker hub上搜索你平台可用的mariadb镜像
     environment:
@@ -10,7 +11,19 @@ services:
       - /data/mysql:/var/lib/mysql
     ports:
       - 3306:3306
-
+#===================================================================
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=db
+      - PMA_PASSWORD=1qaz2wsx
+      - PMA_PORTS=3306
+      - PMA_USER=root
+      - PMA_VERBOSES=db # 自定义名字
+    ports:
+      - 9092:80
+#===================================================================
   adguardhome:
     image: adguard/adguardhome
     restart: always
@@ -18,7 +31,7 @@ services:
       - /data/adguardhome/work:/opt/adguardhome/work:rw
       - /data/adguardhome/conf:/opt/adguardhome/conf:rw
     network_mode: "host"
-
+#===================================================================
   transmission:
     container_name: transmission
     image: linuxserver/transmission:latest
@@ -42,7 +55,7 @@ services:
       - 9091:9091
       - 51413:51413
       - 51413:51413/udp
-
+#===================================================================
   tieba-cloud-sign:
     image: moenetwork/tieba-cloud-sign
     environment:
@@ -56,18 +69,19 @@ services:
     volumes:                                        # 如果重新创建或更新镜像希望保留之前的所有信息，请解除此两行注释
       - /data/tieba-cloud-sign/install.lock:/var/www/setup/install.lock  # 在当前目录下自行新建文件install.lock，内容为：1
     ports:
-      - 8080:8080
+      - 9095:8080
     links:
       - db
     depends_on:
       - db
-
+#===================================================================
   homeassistant:
     image: uhub.service.ucloud.cn/naturelr/home-assistant:stable
-    restart: always
+    restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
     volumes:
       - /data/homeassistant:/config:rw
     network_mode: "host"
-
+    privileged: true
+#===================================================================
