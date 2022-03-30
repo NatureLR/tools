@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  cloudreve:
+    image: xavierniu/cloudreve:latest
+    restart: always
+    volumes:
+      - /data/adguardhome/work:/cloudreve/db
+      - /data/adguardhome/conf:/opt/adguardhome/conf

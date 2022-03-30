@@ -4,12 +4,9 @@
 
 ## 收录的服务
 
-* tieba-cloud-sign 百度贴吧自动签到
-
-* adguardhome 去广告dns
-
-* home-assistant 智能家居
-
-* cloudreve 私有云盘
-
-* openwrt
+|名字|说明|默认端口
+|---------------|--------------- |---
+adguardhome     | 去广告dns       |9094
+home-assistant  | 智能家居        |8123
+tieba-cloud-sign| 百度贴吧自动签到 |8080
+transmission    | 下载器          |9091
