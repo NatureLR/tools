@@ -5,5 +5,9 @@ services:
     image: xavierniu/cloudreve:latest
     restart: always
     volumes:
-      - /data/adguardhome/work:/cloudreve/db
-      - /data/adguardhome/conf:/opt/adguardhome/conf
+      - /data/cloudreve/uploads:/cloudreve/uploads
+      - /data/cloudreve/avatar:/cloudreve/avatar
+      - /data/cloudreve/db:/cloudreve/db
+      - /data/cloudreve/config/:/cloudreve/config/
+    ports:
+      - 5212:9096
