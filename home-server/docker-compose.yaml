@@ -4,16 +4,19 @@ services:
 #===================================================================
   db:
     image: mariadb:10.7.3  #如若此镜像在你的平台上不可用，可以自行在docker hub上搜索你平台可用的mariadb镜像
+    container_name: db
     environment:
       - MYSQL_DATABASE=tiebacloud
       - MYSQL_ROOT_PASSWORD=1qaz2wsx
     volumes:
       - /data/mysql:/var/lib/mysql
+    restart: always
     ports:
       - 3306:3306
 #===================================================================
   phpmyadmin:
     image: phpmyadmin:latest
+    container_name: phpmyadmin
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOSTS=db
@@ -26,6 +29,7 @@ services:
 #===================================================================
   adguardhome:
     image: adguard/adguardhome
+    container_name: adguardhome
     restart: always
     volumes:
       - /data/adguardhome/work:/opt/adguardhome/work:rw
@@ -58,6 +62,7 @@ services:
 #===================================================================
   tieba-cloud-sign:
     image: moenetwork/tieba-cloud-sign
+    container_name: tieba-cloud-sig
     environment:
       - PUID=1000  # 可修改为你想以什么用户运行caddy，该用户的UID
       - PGID=1000  # 可修改为你想以什么用户运行caddy，该用户的UID
@@ -68,6 +73,7 @@ services:
       - CSRF=true
     volumes:                                        # 如果重新创建或更新镜像希望保留之前的所有信息，请解除此两行注释
       - /data/tieba-cloud-sign/install.lock:/var/www/setup/install.lock  # 在当前目录下自行新建文件install.lock，内容为：1
+    restart: always
     ports:
       - 9095:8080
     links:
@@ -77,6 +83,7 @@ services:
 #===================================================================
   homeassistant:
     image: uhub.service.ucloud.cn/naturelr/home-assistant:stable
+    container_name: homeassistant
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
@@ -85,3 +92,18 @@ services:
     network_mode: "host"
     privileged: true
 #===================================================================
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    volumes:
+      - /data/nextcloud/nextcloud:/var/www/html
+      - /data/nextcloud/apps:/var/www/html/custom_apps
+      - /data/nextcloud/config:/var/www/html/config
+      - /data/nextcloud/data:/var/www/html/data
+    restart: always
+    ports:
+      - 9096:80
+    links:
+    - db
+    depends_on:
+    - db
