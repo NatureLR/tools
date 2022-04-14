@@ -13,6 +13,12 @@ services:
     restart: always
     ports:
       - 3306:3306
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
 #===================================================================
   phpmyadmin:
     image: phpmyadmin:latest
@@ -93,8 +99,11 @@ services:
     privileged: true
 #===================================================================
   nextcloud:
-    image: nextcloud:latest
+    image: nextcloud-smb:latest
     container_name: nextcloud
+    build: 
+      context: .
+      dockerfile: nextcloud.Dockerfile
     volumes:
       - /data/nextcloud/nextcloud:/var/www/html
       - /data/nextcloud/apps:/var/www/html/custom_apps
@@ -105,5 +114,7 @@ services:
       - 9096:80
     links:
     - db
+    - redis
     depends_on:
     - db
+    - redis
