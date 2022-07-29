@@ -1,0 +1,8 @@
+# 将k8s配置文件放在.kube下的configs下保存为x.yaml文件
+# 将本脚本添加可执行权限翻到path下即可使用kubectl cc 快速切换多集群
+
+#! /bin/bash
+
+out=`ls ~/.kube/configs/ | awk -F "." '{print$1}' | fzf --ansi --no-preview`
+
+ln -f  -s ~/.kube/configs/$out.yaml ~/.kube/config%
