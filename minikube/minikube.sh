@@ -2,7 +2,6 @@
 
 set -e
 
-
 # 输出日志
 log() {
     logfile=./log
@@ -10,18 +9,32 @@ log() {
 
     case $1 in
     info)
-        echo -e "\033[32m$msg" | tee -a $logfile
-        ;;
+        echo -e "\033[32m$msg" | tee -a $logfile;;
     warn)
-        echo -e "\033[33m$msg" | tee -a $logfile
-        ;;
+        echo -e "\033[33m$msg" | tee -a $logfile;;
     err)
-        echo -e "\033[31m$msg" | tee -a $logfile
-        ;;
+        echo -e "\033[31m$msg" | tee -a $logfile;;
     *)
-        echo -e "\033[32m$msg" | tee -a $logfile
-        ;;
+        echo -e "\033[32m$msg" | tee -a $logfile;;
     esac
+}
+
+monitoring() {
+    git clone https://github.com/prometheus-operator/kube-prometheus.git
+    cd kube-prometheus
+    kubectl apply --server-side -f manifests/setup
+    kubectl apply -f manifests/
+}
+
+loki() {
+    helm repo add grafana https://grafana.github.io/helm-charts
+    helm install loki grafana/loki-stack \
+        --set grafana.enabled=true \
+        --namespace loki \
+        --create-namespace
+
+    kubectl -n loki rollout status sts loki
+    sleep 5s
 }
 
 rancher(){
@@ -96,41 +109,40 @@ cilium(){
 }
 
 install_calico(){
-
     minikube start  --network-plugin=cni --memory=8g --cpus=4  --cni=calico
-
 }
 
-
 cni(){
-
     cilium
-
 }
 
 install(){
-    minikube start  --network-plugin=cni \
-                --memory=8g --cpus=4 \
-                --bootstrapper=kubeadm \
-                --extra-config=kubelet.authentication-token-webhook=true \
-                --extra-config=kubelet.authorization-mode=Webhook \
-                --extra-config=scheduler.address=0.0.0.0 \
-                --extra-config=controller-manager.address=0.0.0.0
+    minikube start  \
+        --network-plugin=cni \
+        --memory=8g \
+        --cpus=4 \
+        --bootstrapper=kubeadm \
+        --extra-config=kubelet.authentication-token-webhook=true \
+        --extra-config=kubelet.authorization-mode=Webhook \
+        --extra-config=scheduler.bind-address=0.0.0.0 \
+        --extra-config=controller-manager.bind-address=0.0.0.0
     log =============minikube启动完成=============
 }
 
 # 因为macos的网络限制只能使用端口转发
 port_forward(){
-    kubectl port-forward -n cattle-system svc/rancher 8080:80 8443:443 > /dev/null 2>&1 &
-    kubectl port-forward -n kube-system   svc/hubble-ui --address 0.0.0.0 --address :: 12000:80 > /dev/null 2>&1 &
+    kubectl port-forward -n cattle-system svc/rancher   8443:443 > /dev/null  2>&1 &
+    kubectl port-forward -n kube-system   svc/hubble-ui 12000:80 > /dev/null  2>&1 &
+    #kubectl port-forward -n monitoring    svc/grafana   3000:3000 > /dev/null 2>&1 &
 }
-
 
 install_all(){
     install
     cni
     cert_manager
     rancher
+    monitoring
+    loki
 }
 
 help(){
@@ -143,20 +155,19 @@ help(){
 main(){
     case $1 in
     certmanager)
-        cert_manager
-    ;;
+        cert_manager;;
     rancher)
-        rancher
-    ;;
+        rancher;;
     cni)
-        cni
-    ;;
+        cni;;
+    log)
+        loki;;
+    monitoring)
+        monitoring;;
     port-forward)
-        port_forward
-    ;;
+        port_forward;;
     *)
-        install_all
-    ;;
+        install_all;;
     esac
 }
 
