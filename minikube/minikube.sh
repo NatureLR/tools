@@ -52,6 +52,7 @@ rancher(){
      --set hostname=rancher.naturelr.cc
     
     kubectl -n cattle-system rollout status deployment rancher
+    # helm upgrade rancher rancher-latest/rancher  --reuse-values
 }
 
 cert_manager(){
