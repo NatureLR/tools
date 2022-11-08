@@ -21,7 +21,7 @@ log() {
 
 onlog() {
     log "-I" "-p tcp --dport 80"
-    echo "cat tail -f /var/log/messages 或者 dmesg -T"
+    echo "tail -f /var/log/messages 或者 dmesg -T"
 }
 
 offlog() {
