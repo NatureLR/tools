@@ -13,18 +13,16 @@ iptables -nvL PREROUTING -t mangle
 log PREROUTING nat
 iptables -nvL PREROUTING -t nat
 
-
-log INUT mangle
+log INPUT mangle
 iptables -nvL INPUT -t mangle
-log INUT nat
+log INPUT nat
 iptables -nvL INPUT -t nat
-log INUT filter
+log INPUT filter
 iptables -nvL INPUT -t filter
 
-
-log INUT filter
+log FORWARD filter
 iptables -nvL FORWARD -t mangle
-log INUT filter
+log FORWARD filter
 iptables -nvL FORWARD -t filter
 
 log OUTPUT raw
