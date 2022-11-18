@@ -3,13 +3,14 @@
 
 set -e
 
-condition="-I" "-p tcp -m multiport --dport 80"
+condition="-p tcp -m multiport --dport 80"
 
 log() {
     iptables -t raw    $1 PREROUTING  $2 -j LOG --log-prefix "target in raw.prerouting>"
     iptables -t mangle $1 PREROUTING  $2 -j LOG --log-prefix "target in mangle.prerouting>"
     iptables -t nat    $1 PREROUTING  $2 -j LOG --log-prefix "target in nat.prerouting>"
     iptables -t mangle $1 INPUT       $2 -j LOG --log-prefix "target in mangle.input>"
+    iptables -t nat    $1 INPUT       $2 -j LOG --log-prefix "target in mangle.input>"
     iptables -t filter $1 INPUT       $2 -j LOG --log-prefix "target in filter.input>"
     iptables -t raw    $1 OUTPUT      $2 -j LOG --log-prefix "target in raw.output>"
     iptables -t mangle $1 OUTPUT      $2 -j LOG --log-prefix "target in mangle.output>"
@@ -18,7 +19,7 @@ log() {
     iptables -t mangle $1 FORWARD     $2 -j LOG --log-prefix "target in mangle.forward>"
     iptables -t filter $1 FORWARD     $2 -j LOG --log-prefix "target in filter.forward>"
     iptables -t mangle $1 POSTROUTING $2 -j LOG --log-prefix "target in mangle.postrouting>"
-    iptables -t mangle $1 POSTROUTING $2 -j LOG --log-prefix "target in nat.postrouting>"
+    iptables -t nat    $1 POSTROUTING $2 -j LOG --log-prefix "target in nat.postrouting>"
 }
 
 onlog() {
