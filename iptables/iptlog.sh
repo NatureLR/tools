@@ -3,6 +3,8 @@
 
 set -e
 
+condition="-I" "-p tcp -m multiport --dport 80"
+
 log() {
     iptables -t raw    $1 PREROUTING  $2 -j LOG --log-prefix "target in raw.prerouting>"
     iptables -t mangle $1 PREROUTING  $2 -j LOG --log-prefix "target in mangle.prerouting>"
@@ -20,12 +22,12 @@ log() {
 }
 
 onlog() {
-    log "-I" "-p tcp --dport 80"
+    log "-I" "$condition"
     echo "tail -f /var/log/messages 或者 dmesg -T"
 }
 
 offlog() {
-    log "-D" "-p tcp --dport 80"
+    log "-D" "$condition"
 }
 
 main() {
