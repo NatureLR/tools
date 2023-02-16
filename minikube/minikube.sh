@@ -83,6 +83,8 @@ gitlab(){
     --namespace gitlab \
     --set global.hosts.domain=git.nature.cc \
     --set certmanager-issuer.email=naturelr@nature.cc
+
+#   kubectl get secret <name>-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo
 }
 
 cilium(){
