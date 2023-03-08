@@ -9,6 +9,8 @@ if ! [ -x "$(command -v fzf)" ]; then
     exit 1
 fi
 
-out=`ls ~/.kube/configs/ | awk -F "." '{print$1}' | fzf --ansi --no-preview`
+out=$(FZF_DEFAULT_COMMAND='for l in $(basename ~/.kube/configs/*yaml); do echo ${l%?????}; done' fzf --ansi --no-preview)
 
-ln -f  -s ~/.kube/configs/$out.yaml ~/.kube/config%
+ln -f -s ~/.kube/configs/$out.yaml ~/.kube/config
+
+echo 切换到$out
