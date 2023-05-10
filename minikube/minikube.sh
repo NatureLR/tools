@@ -42,13 +42,12 @@ rancher(){
     # 添加rancher的repo仓库，这里是用latest，生产环境推荐使用stable，尝鲜使用alpha
     helm repo add rancher-latest http://rancher-mirror.oss-cn-beijing.aliyuncs.com/server-charts/latest
 
-    # 为rancher创建namespace
-    kubectl create namespace cattle-system
-
     # 安装rancher
     helm install rancher rancher-latest/rancher \
      --namespace cattle-system \
+     --create-namespace \
      --set replicas=1 \
+     --set global.cattle.psp.enabled=false \
      --set hostname=rancher.naturelr.cc
     
     kubectl -n cattle-system rollout status deployment rancher
@@ -63,13 +62,11 @@ cert_manager(){
     # 更新仓库
     helm repo update
     
-    # 创建cert-manager的namespace
-    kubectl create namespace cert-manager
-    
     # 使用helm安装cert-manager
     helm install \
      cert-manager jetstack/cert-manager \
      --namespace cert-manager \
+     --create-namespace \
      --set installCRDs=trues
 
     kubectl -n cert-manager rollout status deployment cert-manager
