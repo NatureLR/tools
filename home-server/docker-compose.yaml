@@ -19,6 +19,15 @@ services:
 #    restart: always
 #    ports:
 #      - 6379:6379
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - /data/nginx/conf.d:/etc/nginx/conf.d
+      - /data/nginx/html:/usr/share/nginx/html
+    restart: always
+    ports:
+      - 80:80
 #===================================================================
   phpmyadmin:
     image: phpmyadmin:latest
@@ -89,13 +98,14 @@ services:
       - db
 #===================================================================
   homeassistant:
-    image: uhub.service.ucloud.cn/naturelr/home-assistant:stable
+    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
     container_name: homeassistant
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
     volumes:
       - /data/homeassistant:/config:rw
+      - /etc/localtime:/etc/localtime:ro
     network_mode: "host"
     privileged: true
 #===================================================================
