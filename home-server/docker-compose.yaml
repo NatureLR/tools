@@ -27,7 +27,7 @@ services:
       - /data/nginx/html:/usr/share/nginx/html
     restart: always
     ports:
-      - 80:80
+      - 6080:80
 #===================================================================
   phpmyadmin:
     image: phpmyadmin:latest
@@ -41,12 +41,14 @@ services:
       - PMA_USER=root
       - PMA_VERBOSES=db # 自定义名字
     ports:
-      - 9092:80
+      - 6082:80
 #===================================================================
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
     restart: always
+    #ports:
+    #  - 6081:6081
     volumes:
       - /data/adguardhome/work:/opt/adguardhome/work:rw
       - /data/adguardhome/conf:/opt/adguardhome/conf:rw
@@ -72,7 +74,7 @@ services:
       - /data/transmission/downloads:/downloads:rw
       - /data/transmission/watch:/watch:rw
     ports:
-      - 9091:9091
+      - 6085:9091
       - 51413:51413
       - 51413:51413/udp
 #===================================================================
@@ -91,7 +93,7 @@ services:
       - /data/tieba-cloud-sign/install.lock:/var/www/setup/install.lock  # 在当前目录下自行新建文件install.lock，内容为：1
     restart: always
     ports:
-      - 9095:8080
+      - 6084:8080
     links:
       - db
     depends_on:
@@ -103,11 +105,22 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
+    #ports:
+    #  - 6083:6083
     volumes:
       - /data/homeassistant:/config:rw
       - /etc/localtime:/etc/localtime:ro
     network_mode: "host"
     privileged: true
+#===================================================================
+  gitlab-runner:
+    container_name: gitlab-runner
+    image: gitlab/gitlab-runner:latest
+    restart: unless-stopped
+    volumes:
+      - /data/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+      
 #===================================================================
 #  nextcloud:
 #    image: nextcloud-smb:latest
