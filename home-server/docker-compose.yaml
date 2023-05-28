@@ -56,7 +56,7 @@ services:
 #===================================================================
   transmission:
     container_name: transmission
-    image: linuxserver/transmission:latest
+    image: linuxserver/transmission:version-3.00-r8
     restart: always
     stdin_open: true
     tty: true
@@ -73,6 +73,7 @@ services:
       - /data/transmission/config:/config:rw
       - /data/transmission/downloads:/downloads:rw
       - /data/transmission/watch:/watch:rw
+      - /data/transmission/ui:/ui
     ports:
       - 6085:9091
       - 51413:51413
