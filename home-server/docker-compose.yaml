@@ -1,5 +1,3 @@
-version: "3"
-
 services:
 #===================================================================
   db:
@@ -80,8 +78,8 @@ services:
       - 51413:51413/udp
 #===================================================================
   tieba-cloud-sign:
-    image: moenetwork/tieba-cloud-sign
-    container_name: tieba-cloud-sig
+    image: moenetwork/tieba-cloud-sign:latest
+    container_name: tieba-cloud-sign
     environment:
       - PUID=1000  # 可修改为你想以什么用户运行caddy，该用户的UID
       - PGID=1000  # 可修改为你想以什么用户运行caddy，该用户的UID
@@ -137,6 +135,24 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
+#===================================================================
+  m3u8-downloader:
+    image:  naturelingran/m3u8-downloader:latest
+    restart: always
+    container_name: m3u8-downloade
+    ports:
+      - "6087:80"
+#===================================================================
+  portainer:
+    image: portainer/portainer-ce:alpine
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - "6088:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/data/portainer:/data"
+    restart: always
 #===================================================================
 #  nextcloud:
 #    image: nextcloud-smb:latest
