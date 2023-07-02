@@ -153,3 +153,17 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/data/portainer:/data"
     restart: always
+#===================================================================
+  alist:
+    restart: always
+    volumes:
+        - '/data/alist:/opt/alist/data'
+        - '/:/host'
+    ports:
+        - '5244:5244'
+    environment:
+        - PUID=0
+        - PGID=0
+        - UMASK=022
+    container_name: alist
+    image: 'xhofe/alist:latest'
