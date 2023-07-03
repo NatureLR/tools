@@ -160,7 +160,7 @@ services:
         - '/data/alist:/opt/alist/data'
         - '/:/host'
     ports:
-        - '5244:5244'
+        - '6089:5244'
     environment:
         - PUID=0
         - PGID=0
