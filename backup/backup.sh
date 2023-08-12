@@ -7,12 +7,12 @@ magenta='\e[95m'
 cyan='\e[96m'
 none='\e[0m'
 
-_red()    { echo -e "${red}"     "$*" "${none}"; }
-_green()  { echo -e "${green}"   "$*" "${none}"; }
-_yellow() { echo -e "${yellow}"  "$*" "${none}"; }
-_magenta(){ echo -e "${magenta}" "$*" "${none}"; }
-_cyan()   { echo -e "${cyan}"    "$*" "${none}"; }
-_none()   { echo -e "${none}"    "$*" "${none}"; }
+_red()    { echo "${red}"     "$*" "${none}"; }
+_green()  { echo "${green}"   "$*" "${none}"; }
+_yellow() { echo "${yellow}"  "$*" "${none}"; }
+_magenta(){ echo "${magenta}" "$*" "${none}"; }
+_cyan()   { echo "${cyan}"    "$*" "${none}"; }
+_none()   { echo "${none}"    "$*" "${none}"; }
 
 # 定义日志函数
 log() {
@@ -47,10 +47,10 @@ log() {
 }
 
 # 备份的目录
-src_dir="/tmp"
+src_dir="/data"
 # 备份存放的目录
-dst_dir="/root/bak"
-name="test"
+dst_dir="/home/pi/bak"
+name="data"
 
 
 backup(){
