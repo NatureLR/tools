@@ -112,13 +112,13 @@ services:
     network_mode: "host"
     privileged: true
 #===================================================================
-  gitlab-runner:
-    container_name: gitlab-runner
-    image: gitlab/gitlab-runner:latest
-    restart: unless-stopped
-    volumes:
-      - /data/gitlab-runner/config:/etc/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock
+#  gitlab-runner:
+#    container_name: gitlab-runner
+#    image: gitlab/gitlab-runner:latest
+#    restart: unless-stopped
+#    volumes:
+#      - /data/gitlab-runner/config:/etc/gitlab-runner
+#      - /var/run/docker.sock:/var/run/docker.sock
 #===================================================================
   clash:
     image: dreamacro/clash-premium:latest
