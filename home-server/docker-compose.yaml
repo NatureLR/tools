@@ -25,7 +25,7 @@ services:
       - /data/nginx/html:/usr/share/nginx/html
     restart: always
     ports:
-      - 6080:80
+      - 80:80
 #===================================================================
   phpmyadmin:
     image: phpmyadmin:latest
