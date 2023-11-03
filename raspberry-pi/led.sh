@@ -1,7 +1,5 @@
 #! /bin/bash
 
-
-
 # 绿色的灯
 #echo 0    | sudo tee   /sys/class/leds/led0/brightness
 #echo none | sudo tee  /sys/class/leds/led0/trigger
@@ -13,13 +11,13 @@ greenLED="/sys/class/leds/led0/brightness"
 redLED="/sys/class/leds/led1/brightness"
 
 off(){
-echo 0 > $greenLED
-echo 0 > $redLED
+    echo 0 > $greenLED
+    echo 0 > $redLED
 }
 
 on(){
-echo 1 > $greenLED
-echo 1 > $redLED
+    echo 1 > $greenLED
+    echo 1 > $redLED
 }
 
 main(){
