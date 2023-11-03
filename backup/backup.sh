@@ -47,10 +47,10 @@ log() {
 }
 
 # 备份的目录
-src_dir="/data"
+src_dir=$1
 # 备份存放的目录
-dst_dir="/home/pi/bak"
-name="data"
+dst_dir=$2
+name=$(basename "$src_dir")
 
 
 backup(){
@@ -63,8 +63,10 @@ backup(){
 
     # 删除本地前一天的备份
     old_bak=$(find $local_dir -maxdepth 1  -mtime +1 -name '*_backuptar.gz')
-    log 删除前一天的备份:"$old_bak"
-    rm -rf "$old_bak"
+    if [ -n "$old_bak" ];then
+        log 删除前一天的备份:"$old_bak"
+        rm -rf "$old_bak"
+    fi
 }
 
 main(){
