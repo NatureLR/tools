@@ -6,3 +6,4 @@ set completeopt=longest,menu " 智能补全
 filetype plugin on " 载入文件类型插件 
 filetype indent on " 为特定文件类型载入相关缩进文件 
 set showmatch      " 设置匹配模式
+set t_Co=256 "设置256色
