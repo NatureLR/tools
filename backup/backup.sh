@@ -62,7 +62,7 @@ backup(){
     log 最新的备份:"$latest_bak"
 
     # 删除本地前一天的备份
-    old_bak=$(find $local_dir -maxdepth 1  -mtime +1 -name '*_backuptar.gz')
+    old_bak=$(find $src_dir -maxdepth 1 -mtime +1 -name '*_backup.tar.gz')
     if [ -n "$old_bak" ];then
         log 删除前一天的备份:"$old_bak"
         rm -rf "$old_bak"
