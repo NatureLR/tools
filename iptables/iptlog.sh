@@ -37,8 +37,9 @@ main() {
         onlog;;
     "off")
         offlog;;
+    *)
+        echo "on:开启日志 off关闭日志";;
     esac
-        echo "on:开启日志 off关闭日志";
 }
 
 main "$@"
