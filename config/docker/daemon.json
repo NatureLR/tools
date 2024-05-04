@@ -1,5 +1,4 @@
 {
-    "oom-score-adjust": -1000,
     "log-driver": "json-file",
     "log-opts": {
         "max-size": "100m",
