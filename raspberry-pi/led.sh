@@ -7,8 +7,13 @@
 #echo none | sudo tee  /sys/class/leds/led1/trigger
 #echo 0    | sudo tee  /sys/class/leds/led1/brightness
 
-greenLED="/sys/class/leds/led0/brightness"
-redLED="/sys/class/leds/led1/brightness"
+# 老系统
+# greenLED="/sys/class/leds/led0/brightness"
+# redLED="/sys/class/leds/led1/brightness"
+
+# 新系统 红色的是电源灯 绿色的是活动灯
+greenLED="/sys/devices/platform/leds/leds/ACT/brightness"
+redLED="/sys/devices/platform/leds/leds/PWR/brightness"
 
 off(){
     echo 0 > $greenLED
