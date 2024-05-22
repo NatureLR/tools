@@ -82,12 +82,10 @@ plugins=(
     git
     extract
     colorize
-    github
     docker
     docker-compose
     zsh-autosuggestions
     zsh-syntax-highlighting
-    golang
     kubectl
     fzf-tab
 )
