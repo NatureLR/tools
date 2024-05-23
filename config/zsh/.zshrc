@@ -127,24 +127,22 @@ export PATH=$PATH:$GOBIN
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ls="lsd"
+#
+#
+command -v lsd >/dev/null 2>&1 && alias ls='lsd'
 alias ll="ls -lAF"
 alias la='ls -A'
 alias l='ls -CF'
 alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
 alias grep='grep --color=auto'
-alias fzfv="fzf --height 80% --layout=reverse --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'" # fzf 预览设置
-# brew 多版本共存
-alias ibrew='arch -x86_64 /usr/local/bin/brew'
+# Check if nvim exists and alias vim to nvim if it does
+command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 # safe rm
-alias rm="trash -F"
+command -v trash >/dev/null 2>&1 && alias rm='trash -F'
 
 # 补全目录
 fpath=(~/.zsh_completion $fpath)
-
-# fzf配置
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -156,11 +154,16 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # kubecolor
-alias kubectl="kubecolor"
-# make completion work with kubecolor
-compdef kubecolor=kubectl
-# kubecolor 5分钟以内创建的资源高亮
-export KUBECOLOR_OBJ_FRESH="5m"
+if command -v kubecolor >/dev/null 2>&1; then
+    alias kubectl="kubecolor"
+    # make completion work with kubecolor
+    compdef kubecolor=kubectl
+    # kubecolor 5分钟以内创建的资源高亮
+    export KUBECOLOR_OBJ_FRESH="5m"
+fi
+# fzf配置
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+alias fzfv="fzf --height 80% --layout=reverse --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'" # fzf 预览设置
 
 # fzf-tab配置
 # disable sort when completing `git checkout`
