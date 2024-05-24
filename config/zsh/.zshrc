@@ -140,6 +140,8 @@ alias grep='grep --color=auto'
 command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 # safe rm
 command -v trash >/dev/null 2>&1 && alias rm='trash -F'
+# cat
+command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never'
 
 # 补全目录
 fpath=(~/.zsh_completion $fpath)
