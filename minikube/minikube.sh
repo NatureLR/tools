@@ -109,7 +109,7 @@ cilium(){
 }
 
 install_calico(){
-    minikube start  --network-plugin=cni --memory=8g --cpus=4  --cni=calico
+    minikube start --network-plugin=cni --memory=8g --cpus=4 --cni=calico
 }
 
 cni(){
