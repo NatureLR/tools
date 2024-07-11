@@ -5,6 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# homebrew安装的补全
+# hhttps://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+command -v brew >/dev/null 2>&1 && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -81,7 +85,6 @@ plugins=(
     z
     git
     extract
-    colorize
     docker
     docker-compose
     zsh-autosuggestions
@@ -141,10 +144,7 @@ command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 # safe rm
 command -v trash >/dev/null 2>&1 && alias rm='trash -F'
 # cat
-command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never'
-
-# 补全目录
-fpath=(~/.zsh_completion $fpath)
+command -v bat >/dev/null 2>&1 && alias cat='bat -pp --theme=DarkNeon'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

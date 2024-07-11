@@ -369,6 +369,11 @@ tmux_conf_copy_to_os_clipboard=true
 # options passed to urlscan
 tmux_conf_urlscan_options="--compact --dedupe"
 
+# don't use C-a as a prefix, keep C-b as the only prefix
+# 取消c-a前置前缀
+set -gu prefix2
+unbind C-a
+
 
 # -- user customizations -------------------------------------------------------
 
