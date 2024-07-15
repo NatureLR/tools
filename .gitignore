@@ -3,3 +3,4 @@
 test
 test.sh
 .DS_Store
+/minikube/log

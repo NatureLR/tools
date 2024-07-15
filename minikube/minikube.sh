@@ -40,7 +40,7 @@ loki() {
 rancher(){
     log 安装rancher
     # 添加rancher的repo仓库，这里是用latest，生产环境推荐使用stable，尝鲜使用alpha
-    helm repo add rancher-latest http://rancher-mirror.oss-cn-beijing.aliyuncs.com/server-charts/latest
+    helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
     # 安装rancher
     helm install rancher rancher-latest/rancher \
@@ -108,12 +108,13 @@ cilium(){
     kubectl -n kube-system rollout status DaemonSet cilium
 }
 
-install_calico(){
-    minikube start --network-plugin=cni --memory=8g --cpus=4 --cni=calico
+calico(){
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
 }
 
 cni(){
-    cilium
+    #cilium
+    calico
 }
 
 install(){
@@ -132,7 +133,7 @@ install(){
 # 因为macos的网络限制只能使用端口转发
 port_forward(){
     kubectl port-forward -n cattle-system svc/rancher   8443:443 > /dev/null  2>&1 &
-    kubectl port-forward -n kube-system   svc/hubble-ui 12000:80 > /dev/null  2>&1 &
+    #kubectl port-forward -n kube-system   svc/hubble-ui 12000:80 > /dev/null  2>&1 &
     #kubectl port-forward -n monitoring    svc/grafana   3000:3000 > /dev/null 2>&1 &
 }
 
@@ -147,9 +148,9 @@ install_all(){
 
 help(){
     echo  ' ================================================================ '
-    echo  ' 默认安装minikube配置为4c8g，cni使用cilium，安装rancher'
+    echo  ' 默认安装minikube配置为4c8g,cni使用calico,安装rancher'
     echo  ' minikube.sh 全部安装'
-    echo  ' minikube.sh port-forward 端口转发rancher和hubble'
+    echo  ' minikube.sh port-forward 端口转发rancher'
 }
 
 main(){
