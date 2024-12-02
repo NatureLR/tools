@@ -1,0 +1,41 @@
+# kubectl create namespace argocd && kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.11.4/manifests/install.yaml
+# kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+spec:
+  destination:
+    namespace: loki
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: loki-stack
+    helm:
+      parameters:
+      - name: grafana.enabled
+        value: "true"
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 2.10.2
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: manifests
+    repoURL: https://github.com/prometheus-operator/kube-prometheus.git
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+    - ServerSideApply=true
