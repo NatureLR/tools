@@ -67,7 +67,7 @@ cert_manager(){
      cert-manager jetstack/cert-manager \
      --namespace cert-manager \
      --create-namespace \
-     --set installCRDs=trues
+     --set installCRDs=true
 
     kubectl -n cert-manager rollout status deployment cert-manager
     kubectl -n cert-manager rollout status deployment cert-manager-cainjector
