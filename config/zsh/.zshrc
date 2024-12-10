@@ -114,8 +114,9 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# mac 下目录显示颜色
+# ls 显示颜色
 export LSCOLORS="exfxcbdxCxexexabagacad"
+export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=01;32:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43:*.bak=90:*.bakup=90:*.gz=38;5;208;1:*.tar=38;5;208;1"
 
 # Go环境变量
 export GOPATH=$HOME/go
@@ -144,7 +145,7 @@ command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 # safe rm
 command -v trash >/dev/null 2>&1 && alias rm='trash -F'
 # cat
-command -v bat >/dev/null 2>&1 && alias cat='bat -pp --theme=DarkNeon'
+command -v bat >/dev/null 2>&1 && alias cat='bat -pp'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
