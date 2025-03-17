@@ -262,9 +262,3 @@ menu
 }
 
 main
-
-
- log "ddd"
- log  err "dfdfd"
- log info "fdfdfdfdf"
- log warn "fdfdfd"
