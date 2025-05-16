@@ -114,9 +114,14 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# ls 显示颜色
+# macos ls 显示颜色
 export LSCOLORS="exfxcbdxCxexexabagacad"
-export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=01;32:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43:*.bak=90:*.bakup=90:*.gz=38;5;208;1:*.tar=38;5;208;1"
+# 如果有~/.lscolors.sh则使用LS_COLORS https://github.com/trapd00r/LS_COLORS.git
+if [[ ! -f ~/.lscolors.sh ]]; then
+    export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=01;32:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43:*.bak=90:*.bakup=90:*.gz=38;5;208;1:*.tar=38;5;208;1"
+else
+    source ~/.lscolors.sh
+fi
 
 # Go环境变量
 export GOPATH=$HOME/go
@@ -184,3 +189,8 @@ zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+
+# 自动补全快捷键
+bindkey '^X' autosuggest-execute
+# 自动补全颜色
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8787ff"
