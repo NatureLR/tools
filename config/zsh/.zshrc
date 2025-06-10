@@ -194,3 +194,5 @@ zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 bindkey '^X' autosuggest-execute
 # 自动补全颜色
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8787ff"
+# 如果有nvim kubectl edit使用nvim来作为编辑器
+command -v nvim >/dev/null 2>&1 && export KUBE_EDITOR="nvim"
