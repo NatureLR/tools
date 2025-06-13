@@ -82,7 +82,6 @@ HIST_STAMPS="yyyy-mm-dd"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    z
     git
     extract
     docker
@@ -92,6 +91,14 @@ plugins=(
     kubectl
     fzf-tab
 )
+
+# 如果有zoxide则使用zoxide作为目录跳转
+# 否则则使用zshz
+if command -v zoxide >/dev/null 2>&1;then
+    plugins+=(zoxide)
+else
+    plugins+=(z)
+fi
 source $ZSH/oh-my-zsh.sh
 
 # 关闭共享历史命令
@@ -196,3 +203,17 @@ bindkey '^X' autosuggest-execute
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8787ff"
 # 如果有nvim kubectl edit使用nvim来作为编辑器
 command -v nvim >/dev/null 2>&1 && export KUBE_EDITOR="nvim"
+# yazi 的快捷方式 参考 https://yazi-rs.github.io/docs/quick-start
+if command -v yazi >/dev/null 2>&1;then
+    function y() {
+    	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    	yazi "$@" --cwd-file="$tmp"
+    	IFS= read -r -d '' cwd < "$tmp"
+    	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    	rm -f -- "$tmp"
+    }
+    # 更改默认编辑器为nvim
+   command -v nvim >/dev/null 2>&1 && export EDITOR="nvim"
+fi
+
+
