@@ -94,11 +94,8 @@ plugins=(
 
 # 如果有zoxide则使用zoxide作为目录跳转
 # 否则则使用zshz
-if command -v zoxide >/dev/null 2>&1;then
-    plugins+=(zoxide)
-else
-    plugins+=(z)
-fi
+command -v zoxide >/dev/null 2>&1 && plugins+=(zoxide) || plugins+=(z)
+
 source $ZSH/oh-my-zsh.sh
 
 # 关闭共享历史命令
