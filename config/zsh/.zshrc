@@ -142,7 +142,7 @@ export PATH=$PATH:$GOBIN
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
 #
-command -v lsd >/dev/null 2>&1 && alias ls='lsd'
+command -v lsd >/dev/null 2>&1 && alias ls='lsd --date "+%Y/%m/%d %T"'
 alias ll="ls -lAF"
 alias la='ls -A'
 alias l='ls -CF'
@@ -194,8 +194,12 @@ zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
 zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 
-# 自动补全快捷键
-bindkey '^X' autosuggest-execute
+# 判断是否是 macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # 自动补全快捷键
+    bindkey '^X' autosuggest-execute
+fi
+
 # 自动补全颜色
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8787ff"
 # 如果有nvim kubectl edit使用nvim来作为编辑器
