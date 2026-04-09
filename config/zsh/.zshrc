@@ -152,7 +152,11 @@ alias grep='grep --color=auto'
 # Check if nvim exists and alias vim to nvim if it does
 command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 # safe rm
-command -v trash >/dev/null 2>&1 && alias rm='trash -F'
+if command -v trash >/dev/null 2>&1; then
+  alias rm='trash -F'
+elif command -v safe-rm >/dev/null 2>&1; then
+  alias rm='/bin/safe-rm'
+fi
 # cat
 command -v bat >/dev/null 2>&1 && alias cat='bat -pp'
 
