@@ -6,7 +6,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # homebrew安装的补全
-# hhttps://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+# https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 command -v brew >/dev/null 2>&1 && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 # If you come from bash you might have to change your $PATH.
@@ -221,4 +221,8 @@ if command -v yazi >/dev/null 2>&1;then
    command -v nvim >/dev/null 2>&1 && export EDITOR="nvim"
 fi
 
-
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/zxz/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
