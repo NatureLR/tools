@@ -71,7 +71,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-HIST_STAMPS="yyyy-mm-dd"
+HIST_STAMPS="%F %T"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -98,8 +98,22 @@ command -v zoxide >/dev/null 2>&1 && plugins+=(zoxide) || plugins+=(z)
 
 source $ZSH/oh-my-zsh.sh
 
-# 关闭共享历史命令
-#unsetopt share_history
+# 历史记录配置（放在 oh-my-zsh 之后，避免被其 lib/history.zsh 覆盖）
+# 历史文件路径与容量
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
+# 历史记录行为选项
+setopt EXTENDED_HISTORY          # 记录时间戳和执行耗时
+unsetopt SHARE_HISTORY           # 不在多个终端窗口间实时共享历史（oh-my-zsh 默认开启）
+setopt HIST_IGNORE_DUPS          # 忽略紧邻的重复命令
+setopt HIST_IGNORE_ALL_DUPS      # 删除旧的重复记录，只保留最新一条
+setopt HIST_FIND_NO_DUPS         # 反向搜索（Ctrl+R）时不显示重复项
+setopt HIST_REDUCE_BLANKS        # 清除命令中多余的连续空格
+setopt HIST_IGNORE_SPACE         # 以空格开头的命令不存入历史（适合临时/敏感命令）
+setopt HIST_NO_STORE             # 不记录 history 命令本身
+setopt INC_APPEND_HISTORY_TIME   # 每条命令执行完就写入历史文件（记录准确耗时），但不自动读取其他窗口
 
 # User configuration
 
@@ -221,8 +235,3 @@ if command -v yazi >/dev/null 2>&1;then
    command -v nvim >/dev/null 2>&1 && export EDITOR="nvim"
 fi
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/zxz/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
